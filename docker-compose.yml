@@ -1,0 +1,43 @@
+version: "3"
+services:
+  mysqldb:
+    container_name: mysqldb
+    image: mysql:latest
+    restart: unless-stopped
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_USER:root
+      - MYSQL_PASSWORD:root
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=AbdelkaderDB
+    volumes:
+      - db_vol:/var/lib/mysqldb
+    networks:
+      - my_network
+
+  departement_app:
+    build: ./
+    image: abdelkaderbelhadj-5twin4-g3
+    restart: unless-stopped
+    ports:
+      - 8089:8089
+    depends_on:
+      - mysqldb
+    networks:
+      - my_network
+
+  front_app:
+    build: ./Kaddem_FrontEnd
+    image: front
+    restart: unless-stopped
+    ports:
+      - 4200:80
+    networks:
+      - my_network
+
+networks:
+  my_network:
+
+volumes:
+  db_vol:
